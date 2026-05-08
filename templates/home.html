@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}SiteSlim | Webdesign voor starters{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div>
+            <p class="tag">Webdesign voor nieuwkomers en starters</p>
+            <h1>Een professionele website zonder hoog budget</h1>
+            <p>
+                SiteSlim maakt strakke, snelle websites voor ondernemers die slim willen starten.
+                Inclusief social media-koppelingen en een duidelijke online uitstraling.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="{{ url_for('contact') }}">Start jouw website</a>
+                <a class="btn btn-secondary" href="{{ url_for('diensten') }}">Bekijk diensten</a>
+            </div>
+        </div>
+        <div class="card highlight-card">
+            <h3>Vanaf €299</h3>
+            <p>Basis website pakket met 1-3 pagina's</p>
+            <ul>
+                <li>Modern design</li>
+                <li>Mobiel vriendelijk</li>
+                <li>WhatsApp en social media links</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2>Waarom kiezen voor SiteSlim?</h2>
+        <div class="grid-3">
+            <article class="card">
+                <h3>Betaalbaar</h3>
+                <p>Perfect voor nieuwe ondernemers die professioneel online willen beginnen.</p>
+            </article>
+            <article class="card">
+                <h3>Snel live</h3>
+                <p>Jouw website kan in korte tijd online staan met een duidelijke planning.</p>
+            </article>
+            <article class="card">
+                <h3>Volledige ondersteuning</h3>
+                <p>Van design tot social media-koppelingen, alles in een pakket.</p>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}
