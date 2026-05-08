@@ -9,7 +9,9 @@
 <body>
     <header class="site-header">
         <div class="container nav-wrap">
-            <a href="{{ url_for('home') }}" class="brand">SiteSlim</a>
+            <a href="{{ url_for('home') }}" class="brand" aria-label="SiteSlim home">
+                <img src="{{ site_content.logo_src }}" alt="SiteSlim logo" class="brand-logo">
+            </a>
             <nav>
                 <ul class="nav-links">
                     <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -39,21 +41,40 @@
         <div class="container footer-grid">
             <div>
                 <h4>SiteSlim</h4>
-                <p>Betaalbare websites voor nieuwkomers en starters.</p>
+                <p>{{ site_content.footer_about }}</p>
             </div>
             <div>
                 <h4>Social media</h4>
                 <ul class="social-links">
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">TikTok</a></li>
-                    <li><a href="#">LinkedIn</a></li>
+                    {% if site_content.social_instagram_url %}
+                        <li><a href="{{ site_content.social_instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                    {% endif %}
+                    {% if site_content.social_facebook_url %}
+                        <li><a href="{{ site_content.social_facebook_url }}" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                    {% endif %}
+                    {% if site_content.social_tiktok_url %}
+                        <li><a href="{{ site_content.social_tiktok_url }}" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    {% endif %}
+                    {% if site_content.social_linkedin_url %}
+                        <li><a href="{{ site_content.social_linkedin_url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <div>
                 <h4>Contact</h4>
-                <p>Email: info@siteslim.nl</p>
-                <p>Telefoon: +31 6 12 34 56 78</p>
+                <p>Email: {{ site_content.footer_email }}</p>
+                <p>Telefoon: {{ site_content.footer_phone }}</p>
+                <ul class="social-links">
+                    {% if site_content.footer_link_1_label and site_content.footer_link_1_url %}
+                        <li><a href="{{ site_content.footer_link_1_url }}" target="_blank" rel="noopener noreferrer">{{ site_content.footer_link_1_label }}</a></li>
+                    {% endif %}
+                    {% if site_content.footer_link_2_label and site_content.footer_link_2_url %}
+                        <li><a href="{{ site_content.footer_link_2_url }}" target="_blank" rel="noopener noreferrer">{{ site_content.footer_link_2_label }}</a></li>
+                    {% endif %}
+                    {% if site_content.footer_link_3_label and site_content.footer_link_3_url %}
+                        <li><a href="{{ site_content.footer_link_3_url }}" target="_blank" rel="noopener noreferrer">{{ site_content.footer_link_3_label }}</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
         <p class="copyright">&copy; {{ 2026 }} SiteSlim. Alle rechten voorbehouden.</p>

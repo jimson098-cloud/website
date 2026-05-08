@@ -35,6 +35,7 @@ ADMIN_ALLOWED_IPS = {ip.strip() for ip in os.getenv("ADMIN_ALLOWED_IPS", "").spl
 LOGIN_ATTEMPTS_BY_IP: dict[str, dict[str, int]] = {}
 
 DEFAULT_CONTENT = {
+    "logo_src": "/static/images/siteslim-logo.png",
     "hero_tag": "Webdesign voor nieuwkomers en starters",
     "hero_title": "Premium websites die vertrouwen en klanten opleveren",
     "hero_text": (
@@ -51,6 +52,19 @@ DEFAULT_CONTENT = {
     "image_1_src": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=1200&q=80",
     "image_2_src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
     "image_3_src": "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=1200&q=80",
+    "footer_about": "Betaalbare websites voor nieuwkomers en starters.",
+    "footer_email": "info@siteslim.nl",
+    "footer_phone": "+31 6 12 34 56 78",
+    "social_instagram_url": "",
+    "social_facebook_url": "",
+    "social_tiktok_url": "",
+    "social_linkedin_url": "",
+    "footer_link_1_label": "",
+    "footer_link_1_url": "",
+    "footer_link_2_label": "",
+    "footer_link_2_url": "",
+    "footer_link_3_label": "",
+    "footer_link_3_url": "",
 }
 
 
@@ -284,6 +298,11 @@ def home():
     return render_template("home.html", content=load_content())
 
 
+@app.context_processor
+def inject_site_content():
+    return {"site_content": load_content()}
+
+
 @app.route("/diensten")
 def diensten():
     return render_template("diensten.html")
@@ -355,6 +374,19 @@ def admin_dashboard():
             content["image_1_caption"] = request.form.get("image_1_caption", "").strip()
             content["image_2_caption"] = request.form.get("image_2_caption", "").strip()
             content["image_3_caption"] = request.form.get("image_3_caption", "").strip()
+            content["footer_about"] = request.form.get("footer_about", "").strip()
+            content["footer_email"] = request.form.get("footer_email", "").strip()
+            content["footer_phone"] = request.form.get("footer_phone", "").strip()
+            content["social_instagram_url"] = request.form.get("social_instagram_url", "").strip()
+            content["social_facebook_url"] = request.form.get("social_facebook_url", "").strip()
+            content["social_tiktok_url"] = request.form.get("social_tiktok_url", "").strip()
+            content["social_linkedin_url"] = request.form.get("social_linkedin_url", "").strip()
+            content["footer_link_1_label"] = request.form.get("footer_link_1_label", "").strip()
+            content["footer_link_1_url"] = request.form.get("footer_link_1_url", "").strip()
+            content["footer_link_2_label"] = request.form.get("footer_link_2_label", "").strip()
+            content["footer_link_2_url"] = request.form.get("footer_link_2_url", "").strip()
+            content["footer_link_3_label"] = request.form.get("footer_link_3_label", "").strip()
+            content["footer_link_3_url"] = request.form.get("footer_link_3_url", "").strip()
             if save_content(content):
                 flash("Teksten zijn opgeslagen.", "success")
             else:

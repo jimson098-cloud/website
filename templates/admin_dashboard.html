@@ -41,6 +41,45 @@
                     <label for="image_3_caption">Caption foto 3</label>
                     <input id="image_3_caption" name="image_3_caption" type="text" value="{{ content.image_3_caption }}" required>
 
+                    <h3>Footer instellingen</h3>
+                    <label for="footer_about">Footer tekst</label>
+                    <textarea id="footer_about" name="footer_about" rows="3">{{ content.footer_about }}</textarea>
+
+                    <label for="footer_email">Footer email</label>
+                    <input id="footer_email" name="footer_email" type="text" value="{{ content.footer_email }}">
+
+                    <label for="footer_phone">Footer telefoon</label>
+                    <input id="footer_phone" name="footer_phone" type="text" value="{{ content.footer_phone }}">
+
+                    <h3>Social urls (laat leeg om te verbergen)</h3>
+                    <label for="social_instagram_url">Instagram URL</label>
+                    <input id="social_instagram_url" name="social_instagram_url" type="url" value="{{ content.social_instagram_url }}">
+
+                    <label for="social_facebook_url">Facebook URL</label>
+                    <input id="social_facebook_url" name="social_facebook_url" type="url" value="{{ content.social_facebook_url }}">
+
+                    <label for="social_tiktok_url">TikTok URL</label>
+                    <input id="social_tiktok_url" name="social_tiktok_url" type="url" value="{{ content.social_tiktok_url }}">
+
+                    <label for="social_linkedin_url">LinkedIn URL</label>
+                    <input id="social_linkedin_url" name="social_linkedin_url" type="url" value="{{ content.social_linkedin_url }}">
+
+                    <h3>Extra footer links</h3>
+                    <label for="footer_link_1_label">Link 1 titel</label>
+                    <input id="footer_link_1_label" name="footer_link_1_label" type="text" value="{{ content.footer_link_1_label }}">
+                    <label for="footer_link_1_url">Link 1 URL</label>
+                    <input id="footer_link_1_url" name="footer_link_1_url" type="url" value="{{ content.footer_link_1_url }}">
+
+                    <label for="footer_link_2_label">Link 2 titel</label>
+                    <input id="footer_link_2_label" name="footer_link_2_label" type="text" value="{{ content.footer_link_2_label }}">
+                    <label for="footer_link_2_url">Link 2 URL</label>
+                    <input id="footer_link_2_url" name="footer_link_2_url" type="url" value="{{ content.footer_link_2_url }}">
+
+                    <label for="footer_link_3_label">Link 3 titel</label>
+                    <input id="footer_link_3_label" name="footer_link_3_label" type="text" value="{{ content.footer_link_3_label }}">
+                    <label for="footer_link_3_url">Link 3 URL</label>
+                    <input id="footer_link_3_url" name="footer_link_3_url" type="url" value="{{ content.footer_link_3_url }}">
+
                     <button class="btn btn-primary" type="submit">Teksten opslaan</button>
                 </form>
             </article>

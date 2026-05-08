@@ -73,9 +73,15 @@ a {
 }
 
 .brand {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #93c5fd;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.brand-logo {
+    height: 46px;
+    width: auto;
+    display: block;
 }
 
 .nav-links {
@@ -384,6 +390,11 @@ p {
     color: #e2e8f0;
     font-weight: 600;
     margin-top: 0.4rem;
+}
+
+.admin-form h3 {
+    margin: 1rem 0 0.15rem;
+    color: #dbeafe;
 }
 
 .admin-form input,
