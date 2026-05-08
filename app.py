@@ -18,6 +18,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change-this-secret-in-produc
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = True
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB upload limiet.
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.getenv("DATA_DIR", str(BASE_DIR / "data")))
@@ -30,6 +31,8 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "site-images")
 ADMIN_PATH = os.getenv("ADMIN_PATH", "beheer-siteslim").strip("/")
+ADMIN_ALLOWED_IPS = {ip.strip() for ip in os.getenv("ADMIN_ALLOWED_IPS", "").split(",") if ip.strip()}
+LOGIN_ATTEMPTS_BY_IP: dict[str, dict[str, int]] = {}
 
 DEFAULT_CONTENT = {
     "hero_tag": "Webdesign voor nieuwkomers en starters",
@@ -218,9 +221,44 @@ def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def get_client_ip() -> str:
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    return (request.remote_addr or "").strip()
+
+
+def is_admin_ip_allowed() -> bool:
+    if not ADMIN_ALLOWED_IPS:
+        return True
+    return get_client_ip() in ADMIN_ALLOWED_IPS
+
+
+def login_blocked_for_ip(ip: str) -> bool:
+    record = LOGIN_ATTEMPTS_BY_IP.get(ip, {})
+    return int(record.get("blocked_until", 0)) > int(time.time())
+
+
+def track_failed_login(ip: str) -> None:
+    now = int(time.time())
+    record = LOGIN_ATTEMPTS_BY_IP.get(ip, {"count": 0, "blocked_until": 0})
+    if int(record.get("blocked_until", 0)) <= now:
+        record["count"] = int(record.get("count", 0)) + 1
+    if int(record.get("count", 0)) >= 5:
+        record["blocked_until"] = now + 300
+        record["count"] = 0
+    LOGIN_ATTEMPTS_BY_IP[ip] = record
+
+
+def clear_login_attempts(ip: str) -> None:
+    LOGIN_ATTEMPTS_BY_IP.pop(ip, None)
+
+
 def login_required(view_func):
     @wraps(view_func)
     def wrapped(*args, **kwargs):
+        if not is_admin_ip_allowed():
+            return redirect(url_for("home"))
         if not session.get("admin_logged_in"):
             return redirect(url_for("admin_login"))
         return view_func(*args, **kwargs)
@@ -268,7 +306,11 @@ def contact():
 
 @app.route(f"/{ADMIN_PATH}/login", methods=["GET", "POST"])
 def admin_login():
-    if session.get("admin_block_until", 0) > int(time.time()):
+    if not is_admin_ip_allowed():
+        return redirect(url_for("home"))
+
+    client_ip = get_client_ip()
+    if login_blocked_for_ip(client_ip):
         flash("Te veel pogingen. Probeer zo opnieuw.", "error")
         return render_template("admin_login.html")
 
@@ -279,13 +321,11 @@ def admin_login():
         if username == admin_data.get("username") and check_password_hash(
             admin_data.get("password_hash", ""), password
         ):
+            session.clear()
             session["admin_logged_in"] = True
-            session["admin_fail_count"] = 0
+            clear_login_attempts(client_ip)
             return redirect(url_for("admin_dashboard"))
-        fail_count = int(session.get("admin_fail_count", 0)) + 1
-        session["admin_fail_count"] = fail_count
-        if fail_count >= 5:
-            session["admin_block_until"] = int(time.time()) + 300
+        track_failed_login(client_ip)
         flash("Onjuiste gebruikersnaam of wachtwoord.", "error")
     return render_template("admin_login.html")
 
@@ -367,6 +407,24 @@ def admin_dashboard():
 @app.route("/media/<path:filename>")
 def uploaded_file(filename: str):
     return send_from_directory(UPLOADS_DIR, filename)
+
+
+@app.after_request
+def set_security_headers(response):
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' https: data:; "
+        "script-src 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'"
+    )
+    return response
 
 
 if __name__ == "__main__":
