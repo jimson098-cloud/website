@@ -1,11 +1,13 @@
 :root {
-    --bg: #0e1016;
-    --bg-soft: #171a23;
-    --text: #f5f7ff;
-    --muted: #b2b8cf;
-    --primary: #5b8cff;
-    --primary-dark: #3f6ee0;
-    --border: #262c3f;
+    --bg: #f4f7fb;
+    --bg-soft: #ffffff;
+    --text: #14213d;
+    --muted: #5f6e85;
+    --primary: #1f4fd1;
+    --primary-dark: #183fa8;
+    --accent: #0f766e;
+    --border: #d8e0ef;
+    --shadow: 0 12px 30px rgba(16, 42, 90, 0.08);
 }
 
 * {
@@ -15,7 +17,10 @@
 body {
     margin: 0;
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background: var(--bg);
+    background:
+        radial-gradient(circle at 20% 0%, rgba(31, 79, 209, 0.1), transparent 40%),
+        radial-gradient(circle at 85% 10%, rgba(15, 118, 110, 0.08), transparent 35%),
+        var(--bg);
     color: var(--text);
     line-height: 1.6;
 }
@@ -34,7 +39,7 @@ a {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(14, 16, 22, 0.9);
+    background: rgba(244, 247, 251, 0.9);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
 }
@@ -66,7 +71,7 @@ a {
 }
 
 .nav-links a:hover {
-    color: var(--text);
+    color: var(--primary);
 }
 
 .hero {
@@ -82,9 +87,9 @@ a {
 
 .tag {
     display: inline-block;
-    background: rgba(91, 140, 255, 0.15);
-    border: 1px solid rgba(91, 140, 255, 0.5);
-    color: #c9d7ff;
+    background: rgba(31, 79, 209, 0.08);
+    border: 1px solid rgba(31, 79, 209, 0.25);
+    color: var(--primary);
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
     font-size: 0.85rem;
@@ -121,20 +126,29 @@ p {
     border-radius: 0.6rem;
     font-weight: 600;
     border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .btn-primary {
     background: var(--primary);
     color: #fff;
+    box-shadow: 0 8px 18px rgba(31, 79, 209, 0.25);
 }
 
 .btn-primary:hover {
     background: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
-    border-color: var(--border);
+    border-color: #bdc9de;
     color: var(--text);
+    background: #fff;
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .section {
@@ -152,15 +166,16 @@ p {
     border: 1px solid var(--border);
     border-radius: 0.85rem;
     padding: 1.2rem;
+    box-shadow: var(--shadow);
 }
 
 .highlight-card h3 {
-    color: #dce6ff;
+    color: var(--primary);
 }
 
 .highlight-card ul {
     padding-left: 1.1rem;
-    color: #d4daf0;
+    color: #2b3d61;
 }
 
 .narrow {
@@ -173,13 +188,14 @@ p {
     border: 1px solid var(--border);
     border-radius: 0.8rem;
     padding: 1.2rem;
+    box-shadow: var(--shadow);
 }
 
 .site-footer {
     margin-top: 2rem;
     border-top: 1px solid var(--border);
     padding: 2.2rem 0 1.2rem;
-    background: #0c0e14;
+    background: #f0f4fb;
 }
 
 .footer-grid {
@@ -203,7 +219,7 @@ p {
 }
 
 .social-links a:hover {
-    color: var(--text);
+    color: var(--accent);
 }
 
 .copyright {
