@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}SiteSlim | Admin Login{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="admin-card">
+            <h1>Admin login</h1>
+            <p>Log in om teksten, foto's en instellingen te beheren.</p>
+            <form method="post" class="admin-form">
+                <label for="username">Gebruikersnaam</label>
+                <input id="username" name="username" type="text" required>
+
+                <label for="password">Wachtwoord</label>
+                <input id="password" name="password" type="password" required>
+
+                <button class="btn btn-primary" type="submit">Inloggen</button>
+            </form>
+            <p class="admin-note">Eerste login: <strong>admin</strong> / <strong>admin123</strong></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

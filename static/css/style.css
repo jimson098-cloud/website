@@ -35,6 +35,27 @@ a {
     margin: 0 auto;
 }
 
+.flash-wrap {
+    margin-top: 1rem;
+}
+
+.flash {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.65rem;
+    margin-bottom: 0.55rem;
+    border: 1px solid var(--border);
+}
+
+.flash-success {
+    background: rgba(34, 197, 94, 0.16);
+    color: #dcfce7;
+}
+
+.flash-error {
+    background: rgba(239, 68, 68, 0.16);
+    color: #fee2e2;
+}
+
 .site-header {
     position: sticky;
     top: 0;
@@ -333,9 +354,91 @@ p {
     font-size: 0.88rem;
 }
 
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.admin-panel {
+    padding: 1.4rem;
+}
+
+.admin-card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 1.4rem;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    box-shadow: var(--shadow);
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.admin-form label {
+    color: #e2e8f0;
+    font-weight: 600;
+    margin-top: 0.4rem;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+    border: 1px solid #475569;
+    background: #0f1a2e;
+    color: var(--text);
+    border-radius: 0.6rem;
+    padding: 0.62rem 0.72rem;
+    font: inherit;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+    border-color: #60a5fa;
+    outline: none;
+}
+
+.admin-form button {
+    margin-top: 0.75rem;
+}
+
+.admin-note {
+    margin-top: 0.9rem;
+    font-size: 0.92rem;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    margin-top: 1.1rem;
+}
+
+.preview-grid p {
+    margin: 0 0 0.35rem;
+    color: #bfdbfe;
+    font-size: 0.86rem;
+}
+
+.preview-grid img {
+    width: 100%;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+}
+
 @media (max-width: 900px) {
     .hero-grid,
     .image-grid,
+    .admin-grid,
+    .preview-grid,
     .grid-3,
     .footer-grid {
         grid-template-columns: 1fr;

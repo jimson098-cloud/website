@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}SiteSlim | Admin{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1>Admin dashboard</h1>
+        <p>Beheer hier je homepage teksten, foto's en wachtwoord.</p>
+
+        <div class="admin-grid">
+            <article class="card admin-panel">
+                <h2>Teksten aanpassen</h2>
+                <form method="post" class="admin-form">
+                    <input type="hidden" name="form_type" value="content">
+
+                    <label for="hero_tag">Hero tag</label>
+                    <input id="hero_tag" name="hero_tag" type="text" value="{{ content.hero_tag }}" required>
+
+                    <label for="hero_title">Hero titel</label>
+                    <input id="hero_title" name="hero_title" type="text" value="{{ content.hero_title }}" required>
+
+                    <label for="hero_text">Hero tekst</label>
+                    <textarea id="hero_text" name="hero_text" rows="4" required>{{ content.hero_text }}</textarea>
+
+                    <label for="price_title">Prijs titel</label>
+                    <input id="price_title" name="price_title" type="text" value="{{ content.price_title }}" required>
+
+                    <label for="price_text">Prijs tekst</label>
+                    <input id="price_text" name="price_text" type="text" value="{{ content.price_text }}" required>
+
+                    <label for="portfolio_intro">Foto sectie intro</label>
+                    <textarea id="portfolio_intro" name="portfolio_intro" rows="3" required>{{ content.portfolio_intro }}</textarea>
+
+                    <label for="image_1_caption">Caption foto 1</label>
+                    <input id="image_1_caption" name="image_1_caption" type="text" value="{{ content.image_1_caption }}" required>
+
+                    <label for="image_2_caption">Caption foto 2</label>
+                    <input id="image_2_caption" name="image_2_caption" type="text" value="{{ content.image_2_caption }}" required>
+
+                    <label for="image_3_caption">Caption foto 3</label>
+                    <input id="image_3_caption" name="image_3_caption" type="text" value="{{ content.image_3_caption }}" required>
+
+                    <button class="btn btn-primary" type="submit">Teksten opslaan</button>
+                </form>
+            </article>
+
+            <article class="card admin-panel">
+                <h2>Foto uploaden</h2>
+                <form method="post" enctype="multipart/form-data" class="admin-form">
+                    <input type="hidden" name="form_type" value="upload">
+
+                    <label for="slot">Kies plek op homepage</label>
+                    <select id="slot" name="slot" required>
+                        <option value="image_1_src">Foto plek 1</option>
+                        <option value="image_2_src">Foto plek 2</option>
+                        <option value="image_3_src">Foto plek 3</option>
+                    </select>
+
+                    <label for="image_file">Afbeelding</label>
+                    <input id="image_file" name="image_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" required>
+
+                    <button class="btn btn-primary" type="submit">Upload foto</button>
+                </form>
+
+                <div class="preview-grid">
+                    <div>
+                        <p>Huidig foto 1</p>
+                        <img src="{{ content.image_1_src }}" alt="Preview foto 1">
+                    </div>
+                    <div>
+                        <p>Huidig foto 2</p>
+                        <img src="{{ content.image_2_src }}" alt="Preview foto 2">
+                    </div>
+                    <div>
+                        <p>Huidig foto 3</p>
+                        <img src="{{ content.image_3_src }}" alt="Preview foto 3">
+                    </div>
+                </div>
+            </article>
+
+            <article class="card admin-panel">
+                <h2>Wachtwoord wijzigen</h2>
+                <form method="post" class="admin-form">
+                    <input type="hidden" name="form_type" value="password">
+
+                    <label for="current_password">Huidig wachtwoord</label>
+                    <input id="current_password" name="current_password" type="password" required>
+
+                    <label for="new_password">Nieuw wachtwoord</label>
+                    <input id="new_password" name="new_password" type="password" minlength="8" required>
+
+                    <label for="repeat_password">Herhaal nieuw wachtwoord</label>
+                    <input id="repeat_password" name="repeat_password" type="password" minlength="8" required>
+
+                    <button class="btn btn-primary" type="submit">Wachtwoord opslaan</button>
+                </form>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}
