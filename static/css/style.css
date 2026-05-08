@@ -86,21 +86,6 @@ a {
     margin: 0;
 }
 
-.header-logo-slot {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    min-width: 132px;
-}
-
-.header-logo {
-    max-width: 128px;
-    width: 100%;
-    height: auto;
-    display: block;
-    opacity: 0.95;
-}
-
 .nav-links a {
     color: var(--muted);
     font-weight: 500;
@@ -112,6 +97,20 @@ a {
 
 .hero {
     padding: 6rem 0 4rem;
+}
+
+.hero-logo-wrap {
+    margin-bottom: 1rem;
+}
+
+.hero-logo {
+    max-width: 235px;
+    width: 100%;
+    height: auto;
+    display: block;
+    mix-blend-mode: screen;
+    opacity: 0.97;
+    filter: drop-shadow(0 8px 20px rgba(37, 99, 235, 0.3));
 }
 
 .hero-grid {
@@ -480,9 +479,6 @@ p {
     height: auto;
     display: block;
     border-radius: 0.55rem;
-    border: 1px solid var(--border);
-    background: #0b1222;
-    padding: 0.4rem;
 }
 
 @media (max-width: 900px) {
@@ -499,9 +495,5 @@ p {
         flex-direction: column;
         gap: 0.8rem;
         align-items: center;
-    }
-
-    .header-logo-slot {
-        justify-content: center;
     }
 }
