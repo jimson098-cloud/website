@@ -17,12 +17,6 @@
                     <li><a href="{{ url_for('portfolio') }}">Portfolio</a></li>
                     <li><a href="{{ url_for('over_ons') }}">Over ons</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
-                    {% if session.get("admin_logged_in") %}
-                        <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
-                        <li><a href="{{ url_for('admin_logout') }}">Uitloggen</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('admin_login') }}">Admin login</a></li>
-                    {% endif %}
                 </ul>
             </nav>
         </div>

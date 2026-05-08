@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from functools import wraps
 from pathlib import Path
 from typing import Any, Optional
@@ -14,6 +15,9 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change-this-secret-in-production")
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = True
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.getenv("DATA_DIR", str(BASE_DIR / "data")))
@@ -25,6 +29,7 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "site-images")
+ADMIN_PATH = os.getenv("ADMIN_PATH", "beheer-siteslim").strip("/")
 
 DEFAULT_CONTENT = {
     "hero_tag": "Webdesign voor nieuwkomers en starters",
@@ -261,8 +266,12 @@ def contact():
     return render_template("contact.html")
 
 
-@app.route("/admin/login", methods=["GET", "POST"])
+@app.route(f"/{ADMIN_PATH}/login", methods=["GET", "POST"])
 def admin_login():
+    if session.get("admin_block_until", 0) > int(time.time()):
+        flash("Te veel pogingen. Probeer zo opnieuw.", "error")
+        return render_template("admin_login.html")
+
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
@@ -271,19 +280,24 @@ def admin_login():
             admin_data.get("password_hash", ""), password
         ):
             session["admin_logged_in"] = True
+            session["admin_fail_count"] = 0
             return redirect(url_for("admin_dashboard"))
+        fail_count = int(session.get("admin_fail_count", 0)) + 1
+        session["admin_fail_count"] = fail_count
+        if fail_count >= 5:
+            session["admin_block_until"] = int(time.time()) + 300
         flash("Onjuiste gebruikersnaam of wachtwoord.", "error")
     return render_template("admin_login.html")
 
 
-@app.route("/admin/logout")
+@app.route(f"/{ADMIN_PATH}/logout")
 @login_required
 def admin_logout():
     session.clear()
     return redirect(url_for("admin_login"))
 
 
-@app.route("/admin", methods=["GET", "POST"])
+@app.route(f"/{ADMIN_PATH}", methods=["GET", "POST"])
 @login_required
 def admin_dashboard():
     content = load_content()
