@@ -445,6 +445,37 @@ p {
     border: 1px solid var(--border);
 }
 
+.footer-preview {
+    margin-top: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    padding: 0.9rem;
+    background: #0f1a2e;
+}
+
+.footer-preview p {
+    margin: 0.3rem 0;
+}
+
+.logo-preview {
+    margin-top: 1rem;
+}
+
+.logo-preview p {
+    margin-bottom: 0.4rem;
+}
+
+.logo-preview img {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.55rem;
+    border: 1px solid var(--border);
+    background: #0b1222;
+    padding: 0.4rem;
+}
+
 @media (max-width: 900px) {
     .hero-grid,
     .image-grid,

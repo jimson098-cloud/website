@@ -413,6 +413,25 @@ def admin_dashboard():
                 flash("Selecteer een slot en kies een afbeelding.", "error")
             return redirect(url_for("admin_dashboard"))
 
+        if form_type == "logo":
+            file = request.files.get("logo_file")
+            if file and file.filename:
+                if allowed_file(file.filename):
+                    success, image_url = upload_image(file, "logo")
+                    if success:
+                        content["logo_src"] = image_url
+                        if save_content(content):
+                            flash("Logo succesvol geupload.", "success")
+                        else:
+                            flash("Logo geupload, maar inhoud opslaan is mislukt.", "error")
+                    else:
+                        flash("Logo uploaden mislukt op deze hosting omgeving.", "error")
+                else:
+                    flash("Bestandstype niet toegestaan. Gebruik png/jpg/jpeg/webp/gif.", "error")
+            else:
+                flash("Kies eerst een logobestand.", "error")
+            return redirect(url_for("admin_dashboard"))
+
         if form_type == "password":
             current_password = request.form.get("current_password", "")
             new_password = request.form.get("new_password", "")
