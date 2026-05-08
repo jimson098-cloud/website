@@ -1,0 +1,39 @@
+{% macro render_blocks(blocks) %}
+<section class="section">
+    <div class="container builder-grid">
+        {% for block in blocks %}
+            {% if block.type == "hero" %}
+                <article class="card builder-block builder-block-hero">
+                    {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
+                    {% if block.text %}<p>{{ block.text }}</p>{% endif %}
+                    {% if block.button_label and block.button_url %}
+                        <a class="btn btn-primary" href="{{ block.button_url }}">{{ block.button_label }}</a>
+                    {% endif %}
+                </article>
+            {% elif block.type == "image" %}
+                <article class="card builder-block">
+                    {% if block.image_url %}<img class="builder-image" src="{{ block.image_url }}" alt="{{ block.title or 'Afbeelding' }}">{% endif %}
+                    {% if block.title %}<h3>{{ block.title }}</h3>{% endif %}
+                    {% if block.text %}<p>{{ block.text }}</p>{% endif %}
+                </article>
+            {% elif block.type == "cta" %}
+                <article class="card builder-block builder-block-cta">
+                    {% if block.title %}<h3>{{ block.title }}</h3>{% endif %}
+                    {% if block.text %}<p>{{ block.text }}</p>{% endif %}
+                    {% if block.button_label and block.button_url %}
+                        <a class="btn btn-primary" href="{{ block.button_url }}">{{ block.button_label }}</a>
+                    {% endif %}
+                </article>
+            {% else %}
+                <article class="card builder-block">
+                    {% if block.title %}<h3>{{ block.title }}</h3>{% endif %}
+                    {% if block.text %}<p>{{ block.text }}</p>{% endif %}
+                    {% if block.button_label and block.button_url %}
+                        <a class="btn btn-secondary" href="{{ block.button_url }}">{{ block.button_label }}</a>
+                    {% endif %}
+                </article>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endmacro %}

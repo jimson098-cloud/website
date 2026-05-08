@@ -81,6 +81,30 @@
                     <input id="footer_link_3_url" name="footer_link_3_url" type="url" value="{{ content.footer_link_3_url }}">
 
                     <h3>Page Builder (zoals mini-WordPress)</h3>
+                    <input id="page_blocks_json" name="page_blocks_json" type="hidden">
+                    <div class="builder-controls">
+                        <label for="builder-page-select">Kies pagina</label>
+                        <select id="builder-page-select">
+                            <option value="home">Home</option>
+                            <option value="diensten">Diensten</option>
+                            <option value="portfolio">Portfolio</option>
+                            <option value="over_ons">Over ons</option>
+                            <option value="contact">Contact</option>
+                        </select>
+
+                        <label for="builder-block-type">Nieuw bloktype</label>
+                        <select id="builder-block-type">
+                            <option value="hero">Hero</option>
+                            <option value="text">Tekst</option>
+                            <option value="image">Afbeelding</option>
+                            <option value="cta">Call to action</option>
+                        </select>
+                        <button class="btn btn-secondary" id="builder-add-block" type="button">+ Blok toevoegen</button>
+                    </div>
+                    <div id="builder-list" class="builder-list"></div>
+                    <p class="builder-help">Sleep blokken om volgorde te wijzigen, of gebruik de verwijderknop.</p>
+
+                    <h3>Advanced HTML override (optioneel)</h3>
                     <label for="home_custom_html">Home custom HTML</label>
                     <textarea id="home_custom_html" name="home_custom_html" rows="6">{{ content.home_custom_html }}</textarea>
 
@@ -168,5 +192,7 @@
         </div>
     </div>
 </section>
+<script id="page-blocks-data" type="application/json">{{ content.page_blocks | tojson }}</script>
 <script src="{{ url_for('static', filename='js/admin-preview.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin-builder.js') }}"></script>
 {% endblock %}

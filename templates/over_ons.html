@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% import "partials/block_renderer.html" as block_renderer %}
 
 {% block title %}SiteSlim | Over ons{% endblock %}
 
 {% block content %}
-{% if content.over_ons_custom_html %}
+{% if content.page_blocks.over_ons %}
+{{ block_renderer.render_blocks(content.page_blocks.over_ons) }}
+{% elif content.over_ons_custom_html %}
 <section class="section">
     <div class="container page-builder-content">
         {{ content.over_ons_custom_html | safe }}

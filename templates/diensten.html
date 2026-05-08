@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% import "partials/block_renderer.html" as block_renderer %}
 
 {% block title %}SiteSlim | Diensten{% endblock %}
 
 {% block content %}
-{% if content.diensten_custom_html %}
+{% if content.page_blocks.diensten %}
+{{ block_renderer.render_blocks(content.page_blocks.diensten) }}
+{% elif content.diensten_custom_html %}
 <section class="section">
     <div class="container page-builder-content">
         {{ content.diensten_custom_html | safe }}

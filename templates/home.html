@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% import "partials/block_renderer.html" as block_renderer %}
 
 {% block title %}SiteSlim | Webdesign voor starters{% endblock %}
 
 {% block content %}
-{% if content.home_custom_html %}
+{% if content.page_blocks.home %}
+{{ block_renderer.render_blocks(content.page_blocks.home) }}
+{% elif content.home_custom_html %}
 <section class="section">
     <div class="container page-builder-content">
         {{ content.home_custom_html | safe }}

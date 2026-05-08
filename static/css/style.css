@@ -106,6 +106,26 @@ a {
     padding: 1.1rem;
 }
 
+.builder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.builder-block-hero,
+.builder-block-cta {
+    grid-column: 1 / -1;
+}
+
+.builder-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    margin-bottom: 0.7rem;
+}
+
 .hero-grid {
     display: grid;
     gap: 2rem;
@@ -458,9 +478,41 @@ p {
     margin: 0.3rem 0;
 }
 
+.builder-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem;
+    margin-bottom: 0.8rem;
+}
+
+.builder-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.builder-item {
+    border: 1px solid var(--border);
+    background: #0f1a2e;
+    border-radius: 0.7rem;
+    padding: 0.75rem;
+}
+
+.builder-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.builder-help {
+    font-size: 0.88rem;
+    margin-top: 0.4rem;
+}
+
 @media (max-width: 900px) {
     .hero-grid,
     .image-grid,
+    .builder-grid,
     .admin-grid,
     .preview-grid,
     .grid-3,

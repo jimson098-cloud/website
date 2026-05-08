@@ -70,6 +70,13 @@ DEFAULT_CONTENT = {
     "over_ons_custom_html": "",
     "contact_custom_html": "",
     "custom_css": "",
+    "page_blocks": {
+        "home": [],
+        "diensten": [],
+        "portfolio": [],
+        "over_ons": [],
+        "contact": [],
+    },
 }
 
 
@@ -144,13 +151,41 @@ def load_content() -> dict:
             if result and isinstance(result, list) and result[0].get("data"):
                 content = DEFAULT_CONTENT.copy()
                 content.update(result[0]["data"])
+                content["page_blocks"] = normalize_page_blocks(content.get("page_blocks"))
                 return content
         except (HTTPError, URLError, TimeoutError, ValueError, KeyError):
             pass
 
     content = DEFAULT_CONTENT.copy()
     content.update(read_json(CONTENT_FILE))
+    content["page_blocks"] = normalize_page_blocks(content.get("page_blocks"))
     return content
+
+
+def normalize_page_blocks(raw_blocks: Any) -> dict:
+    default_keys = ["home", "diensten", "portfolio", "over_ons", "contact"]
+    normalized = {key: [] for key in default_keys}
+    if not isinstance(raw_blocks, dict):
+        return normalized
+
+    for key in default_keys:
+        blocks = raw_blocks.get(key, [])
+        if isinstance(blocks, list):
+            cleaned = []
+            for block in blocks:
+                if isinstance(block, dict):
+                    cleaned.append(
+                        {
+                            "type": str(block.get("type", "text")),
+                            "title": str(block.get("title", "")),
+                            "text": str(block.get("text", "")),
+                            "image_url": str(block.get("image_url", "")),
+                            "button_label": str(block.get("button_label", "")),
+                            "button_url": str(block.get("button_url", "")),
+                        }
+                    )
+            normalized[key] = cleaned
+    return normalized
 
 
 def save_content(content: dict) -> bool:
@@ -398,6 +433,14 @@ def admin_dashboard():
             content["over_ons_custom_html"] = request.form.get("over_ons_custom_html", "").strip()
             content["contact_custom_html"] = request.form.get("contact_custom_html", "").strip()
             content["custom_css"] = request.form.get("custom_css", "").strip()
+            raw_page_blocks = request.form.get("page_blocks_json", "").strip()
+            if raw_page_blocks:
+                try:
+                    parsed_blocks = json.loads(raw_page_blocks)
+                    content["page_blocks"] = normalize_page_blocks(parsed_blocks)
+                except ValueError:
+                    flash("Page Builder data kon niet worden gelezen.", "error")
+                    return redirect(url_for("admin_dashboard"))
             if save_content(content):
                 flash("Teksten zijn opgeslagen.", "success")
             else:
