@@ -7,14 +7,29 @@
     <div class="container hero-grid">
         <div>
             <p class="tag">Webdesign voor nieuwkomers en starters</p>
-            <h1>Een professionele website zonder hoog budget</h1>
+            <h1>Premium websites die vertrouwen en klanten opleveren</h1>
             <p>
-                SiteSlim maakt strakke, snelle websites voor ondernemers die slim willen starten.
-                Inclusief social media-koppelingen en een duidelijke online uitstraling.
+                SiteSlim bouwt professionele websites met een sterke uitstraling, snelle performance
+                en directe koppeling met jouw social media. Zo groei je als starter met een merk dat
+                meteen serieus overkomt.
             </p>
             <div class="hero-actions">
                 <a class="btn btn-primary" href="{{ url_for('contact') }}">Start jouw website</a>
                 <a class="btn btn-secondary" href="{{ url_for('diensten') }}">Bekijk diensten</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong>7 dagen</strong>
+                    <span>Gemiddeld live</span>
+                </div>
+                <div class="stat-item">
+                    <strong>100%</strong>
+                    <span>Mobiel geoptimaliseerd</span>
+                </div>
+                <div class="stat-item">
+                    <strong>+Social</strong>
+                    <span>Instagram/WhatsApp direct gekoppeld</span>
+                </div>
             </div>
         </div>
         <div class="card highlight-card">
@@ -31,7 +46,29 @@
 
 <section class="section">
     <div class="container">
+        <h2>Webdesign dat er premium uitziet</h2>
+        <p class="section-intro">Enkele sfeerbeelden van moderne websites en creatieve studio-werkplekken.</p>
+        <div class="image-grid">
+            <article class="image-card">
+                <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=1200&q=80" alt="Laptop met modern website design">
+                <div class="image-caption">Modern webdesign</div>
+            </article>
+            <article class="image-card">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Ontwikkelaar werkt aan een professionele website">
+                <div class="image-caption">Snelle ontwikkeling</div>
+            </article>
+            <article class="image-card">
+                <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=1200&q=80" alt="Social media en online marketing op smartphone">
+                <div class="image-caption">Website + social media</div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
         <h2>Waarom kiezen voor SiteSlim?</h2>
+        <p class="section-intro">Je krijgt meer dan een mooie site: je krijgt een complete online basis.</p>
         <div class="grid-3">
             <article class="card">
                 <h3>Betaalbaar</h3>
@@ -46,6 +83,37 @@
                 <p>Van design tot social media-koppelingen, alles in een pakket.</p>
             </article>
         </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2>Hoe we werken</h2>
+        <div class="grid-3">
+            <article class="card process-card">
+                <span class="step-badge">Stap 1</span>
+                <h3>Strategie call</h3>
+                <p>We bepalen jouw doelgroep, stijl en belangrijkste doelen in 30 minuten.</p>
+            </article>
+            <article class="card process-card">
+                <span class="step-badge">Stap 2</span>
+                <h3>Design + bouw</h3>
+                <p>Je krijgt een strak ontwerp met professionele kleuren, teksten en structuur.</p>
+            </article>
+            <article class="card process-card">
+                <span class="step-badge">Stap 3</span>
+                <h3>Live + support</h3>
+                <p>We zetten alles live en zorgen dat je social media en contact direct werken.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section cta-section">
+    <div class="container cta-box">
+        <h2>Klaar voor een premium website voor jouw bedrijf?</h2>
+        <p>Laat SiteSlim jouw online uitstraling professioneel neerzetten, zonder hoge kosten.</p>
+        <a class="btn btn-primary" href="{{ url_for('contact') }}">Plan een gratis intake</a>
     </div>
 </section>
 {% endblock %}
