@@ -73,15 +73,9 @@ a {
 }
 
 .brand {
-    display: inline-flex;
-    align-items: center;
-    line-height: 0;
-}
-
-.brand-logo {
-    height: 46px;
-    width: auto;
-    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #93c5fd;
 }
 
 .nav-links {
@@ -90,6 +84,21 @@ a {
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+.header-logo-slot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 132px;
+}
+
+.header-logo {
+    max-width: 128px;
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.95;
 }
 
 .nav-links a {
@@ -489,6 +498,10 @@ p {
     .nav-wrap {
         flex-direction: column;
         gap: 0.8rem;
-        align-items: flex-start;
+        align-items: center;
+    }
+
+    .header-logo-slot {
+        justify-content: center;
     }
 }

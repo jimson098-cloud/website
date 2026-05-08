@@ -9,9 +9,7 @@
 <body>
     <header class="site-header">
         <div class="container nav-wrap">
-            <a href="{{ url_for('home') }}" class="brand" aria-label="SiteSlim home">
-                <img src="{{ site_content.logo_src }}" alt="SiteSlim logo" class="brand-logo">
-            </a>
+            <a href="{{ url_for('home') }}" class="brand" aria-label="SiteSlim home">SiteSlim</a>
             <nav>
                 <ul class="nav-links">
                     <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -21,6 +19,9 @@
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
                 </ul>
             </nav>
+            <div class="header-logo-slot" aria-label="SiteSlim logo">
+                <img src="{{ site_content.logo_src }}" alt="SiteSlim logo" class="header-logo">
+            </div>
         </div>
     </header>
 
