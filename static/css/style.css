@@ -99,18 +99,11 @@ a {
     padding: 6rem 0 4rem;
 }
 
-.hero-logo-wrap {
-    margin-bottom: 1rem;
-}
-
-.hero-logo {
-    max-width: 235px;
-    width: 100%;
-    height: auto;
-    display: block;
-    mix-blend-mode: screen;
-    opacity: 0.97;
-    filter: drop-shadow(0 8px 20px rgba(37, 99, 235, 0.3));
+.page-builder-content {
+    background: #0f1a2e;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    padding: 1.1rem;
 }
 
 .hero-grid {
@@ -463,22 +456,6 @@ p {
 
 .footer-preview p {
     margin: 0.3rem 0;
-}
-
-.logo-preview {
-    margin-top: 1rem;
-}
-
-.logo-preview p {
-    margin-bottom: 0.4rem;
-}
-
-.logo-preview img {
-    max-width: 220px;
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 0.55rem;
 }
 
 @media (max-width: 900px) {

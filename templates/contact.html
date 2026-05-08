@@ -3,6 +3,13 @@
 {% block title %}SiteSlim | Contact{% endblock %}
 
 {% block content %}
+{% if content.contact_custom_html %}
+<section class="section">
+    <div class="container page-builder-content">
+        {{ content.contact_custom_html | safe }}
+    </div>
+</section>
+{% else %}
 <section class="section">
     <div class="container">
         <h1>Contact</h1>
@@ -15,4 +22,5 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}

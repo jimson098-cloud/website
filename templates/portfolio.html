@@ -3,6 +3,13 @@
 {% block title %}SiteSlim | Portfolio{% endblock %}
 
 {% block content %}
+{% if content.portfolio_custom_html %}
+<section class="section">
+    <div class="container page-builder-content">
+        {{ content.portfolio_custom_html | safe }}
+    </div>
+</section>
+{% else %}
 <section class="section">
     <div class="container">
         <h1>Portfolio</h1>
@@ -23,4 +30,5 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}

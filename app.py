@@ -35,7 +35,6 @@ ADMIN_ALLOWED_IPS = {ip.strip() for ip in os.getenv("ADMIN_ALLOWED_IPS", "").spl
 LOGIN_ATTEMPTS_BY_IP: dict[str, dict[str, int]] = {}
 
 DEFAULT_CONTENT = {
-    "logo_src": "/static/images/siteslim-logo.png",
     "hero_tag": "Webdesign voor nieuwkomers en starters",
     "hero_title": "Premium websites die vertrouwen en klanten opleveren",
     "hero_text": (
@@ -65,6 +64,12 @@ DEFAULT_CONTENT = {
     "footer_link_2_url": "",
     "footer_link_3_label": "",
     "footer_link_3_url": "",
+    "home_custom_html": "",
+    "diensten_custom_html": "",
+    "portfolio_custom_html": "",
+    "over_ons_custom_html": "",
+    "contact_custom_html": "",
+    "custom_css": "",
 }
 
 
@@ -305,22 +310,22 @@ def inject_site_content():
 
 @app.route("/diensten")
 def diensten():
-    return render_template("diensten.html")
+    return render_template("diensten.html", content=load_content())
 
 
 @app.route("/portfolio")
 def portfolio():
-    return render_template("portfolio.html")
+    return render_template("portfolio.html", content=load_content())
 
 
 @app.route("/over-ons")
 def over_ons():
-    return render_template("over_ons.html")
+    return render_template("over_ons.html", content=load_content())
 
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    return render_template("contact.html", content=load_content())
 
 
 @app.route(f"/{ADMIN_PATH}/login", methods=["GET", "POST"])
@@ -387,6 +392,12 @@ def admin_dashboard():
             content["footer_link_2_url"] = request.form.get("footer_link_2_url", "").strip()
             content["footer_link_3_label"] = request.form.get("footer_link_3_label", "").strip()
             content["footer_link_3_url"] = request.form.get("footer_link_3_url", "").strip()
+            content["home_custom_html"] = request.form.get("home_custom_html", "").strip()
+            content["diensten_custom_html"] = request.form.get("diensten_custom_html", "").strip()
+            content["portfolio_custom_html"] = request.form.get("portfolio_custom_html", "").strip()
+            content["over_ons_custom_html"] = request.form.get("over_ons_custom_html", "").strip()
+            content["contact_custom_html"] = request.form.get("contact_custom_html", "").strip()
+            content["custom_css"] = request.form.get("custom_css", "").strip()
             if save_content(content):
                 flash("Teksten zijn opgeslagen.", "success")
             else:
@@ -411,25 +422,6 @@ def admin_dashboard():
                     flash("Bestandstype niet toegestaan. Gebruik png/jpg/jpeg/webp/gif.", "error")
             else:
                 flash("Selecteer een slot en kies een afbeelding.", "error")
-            return redirect(url_for("admin_dashboard"))
-
-        if form_type == "logo":
-            file = request.files.get("logo_file")
-            if file and file.filename:
-                if allowed_file(file.filename):
-                    success, image_url = upload_image(file, "logo")
-                    if success:
-                        content["logo_src"] = image_url
-                        if save_content(content):
-                            flash("Logo succesvol geupload.", "success")
-                        else:
-                            flash("Logo geupload, maar inhoud opslaan is mislukt.", "error")
-                    else:
-                        flash("Logo uploaden mislukt op deze hosting omgeving.", "error")
-                else:
-                    flash("Bestandstype niet toegestaan. Gebruik png/jpg/jpeg/webp/gif.", "error")
-            else:
-                flash("Kies eerst een logobestand.", "error")
             return redirect(url_for("admin_dashboard"))
 
         if form_type == "password":

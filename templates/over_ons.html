@@ -3,6 +3,13 @@
 {% block title %}SiteSlim | Over ons{% endblock %}
 
 {% block content %}
+{% if content.over_ons_custom_html %}
+<section class="section">
+    <div class="container page-builder-content">
+        {{ content.over_ons_custom_html | safe }}
+    </div>
+</section>
+{% else %}
 <section class="section">
     <div class="container narrow">
         <h1>Over SiteSlim</h1>
@@ -16,4 +23,5 @@
         </p>
     </div>
 </section>
+{% endif %}
 {% endblock %}

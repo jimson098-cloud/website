@@ -3,6 +3,13 @@
 {% block title %}SiteSlim | Diensten{% endblock %}
 
 {% block content %}
+{% if content.diensten_custom_html %}
+<section class="section">
+    <div class="container page-builder-content">
+        {{ content.diensten_custom_html | safe }}
+    </div>
+</section>
+{% else %}
 <section class="section">
     <div class="container">
         <h1>Diensten</h1>
@@ -23,4 +30,5 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SiteSlim{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% if site_content.custom_css %}
+    <style>{{ site_content.custom_css }}</style>
+    {% endif %}
 </head>
 <body>
     <header class="site-header">

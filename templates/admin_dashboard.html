@@ -80,6 +80,25 @@
                     <label for="footer_link_3_url">Link 3 URL</label>
                     <input id="footer_link_3_url" name="footer_link_3_url" type="url" value="{{ content.footer_link_3_url }}">
 
+                    <h3>Page Builder (zoals mini-WordPress)</h3>
+                    <label for="home_custom_html">Home custom HTML</label>
+                    <textarea id="home_custom_html" name="home_custom_html" rows="6">{{ content.home_custom_html }}</textarea>
+
+                    <label for="diensten_custom_html">Diensten custom HTML</label>
+                    <textarea id="diensten_custom_html" name="diensten_custom_html" rows="6">{{ content.diensten_custom_html }}</textarea>
+
+                    <label for="portfolio_custom_html">Portfolio custom HTML</label>
+                    <textarea id="portfolio_custom_html" name="portfolio_custom_html" rows="6">{{ content.portfolio_custom_html }}</textarea>
+
+                    <label for="over_ons_custom_html">Over ons custom HTML</label>
+                    <textarea id="over_ons_custom_html" name="over_ons_custom_html" rows="6">{{ content.over_ons_custom_html }}</textarea>
+
+                    <label for="contact_custom_html">Contact custom HTML</label>
+                    <textarea id="contact_custom_html" name="contact_custom_html" rows="6">{{ content.contact_custom_html }}</textarea>
+
+                    <label for="custom_css">Custom CSS (hele site)</label>
+                    <textarea id="custom_css" name="custom_css" rows="6">{{ content.custom_css }}</textarea>
+
                     <button class="btn btn-secondary" type="button" id="preview-footer-btn">Preview footer</button>
                     <button class="btn btn-primary" type="submit">Teksten opslaan</button>
                 </form>
@@ -146,54 +165,8 @@
                 </form>
             </article>
 
-            <article class="card admin-panel">
-                <h2>Logo uploaden</h2>
-                <form method="post" enctype="multipart/form-data" class="admin-form">
-                    <input type="hidden" name="form_type" value="logo">
-                    <label for="logo_file">Nieuw logo</label>
-                    <input id="logo_file" name="logo_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" required>
-                    <button class="btn btn-primary" type="submit">Upload logo</button>
-                </form>
-                <div class="logo-preview">
-                    <p>Huidig logo</p>
-                    <img src="{{ content.logo_src }}" alt="Huidig logo">
-                </div>
-            </article>
         </div>
     </div>
 </section>
-
-<script>
-    (function () {
-        const button = document.getElementById("preview-footer-btn");
-        if (!button) return;
-
-        function value(id) {
-            const element = document.getElementById(id);
-            return element ? element.value.trim() : "";
-        }
-
-        button.addEventListener("click", function () {
-            document.getElementById("preview-about").textContent = value("footer_about") || "-";
-            document.getElementById("preview-email").textContent = value("footer_email") || "-";
-            document.getElementById("preview-phone").textContent = value("footer_phone") || "-";
-
-            const socialItems = [];
-            if (value("social_instagram_url")) socialItems.push("Instagram");
-            if (value("social_facebook_url")) socialItems.push("Facebook");
-            if (value("social_tiktok_url")) socialItems.push("TikTok");
-            if (value("social_linkedin_url")) socialItems.push("LinkedIn");
-            document.getElementById("preview-social").textContent = socialItems.length ? socialItems.join(", ") : "-";
-
-            const extraLinks = [];
-            const l1 = value("footer_link_1_label");
-            const l2 = value("footer_link_2_label");
-            const l3 = value("footer_link_3_label");
-            if (l1) extraLinks.push(l1);
-            if (l2) extraLinks.push(l2);
-            if (l3) extraLinks.push(l3);
-            document.getElementById("preview-links").textContent = extraLinks.length ? extraLinks.join(", ") : "-";
-        });
-    })();
-</script>
+<script src="{{ url_for('static', filename='js/admin-preview.js') }}"></script>
 {% endblock %}

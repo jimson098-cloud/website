@@ -3,12 +3,16 @@
 {% block title %}SiteSlim | Webdesign voor starters{% endblock %}
 
 {% block content %}
+{% if content.home_custom_html %}
+<section class="section">
+    <div class="container page-builder-content">
+        {{ content.home_custom_html | safe }}
+    </div>
+</section>
+{% else %}
 <section class="hero">
     <div class="container hero-grid">
         <div>
-            <div class="hero-logo-wrap">
-                <img src="{{ content.logo_src }}" alt="SiteSlim logo" class="hero-logo">
-            </div>
             <p class="tag">{{ content.hero_tag }}</p>
             <h1>{{ content.hero_title }}</h1>
             <p>{{ content.hero_text }}</p>
@@ -115,4 +119,5 @@
         <a class="btn btn-primary" href="{{ url_for('contact') }}">Plan een gratis intake</a>
     </div>
 </section>
+{% endif %}
 {% endblock %}
