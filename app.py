@@ -2,6 +2,10 @@ import json
 import os
 from functools import wraps
 from pathlib import Path
+from typing import Any, Optional
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 from uuid import uuid4
 
 from flask import Flask, flash, redirect, render_template, request, send_from_directory, session, url_for
@@ -18,6 +22,9 @@ UPLOADS_DIR = Path(os.getenv("UPLOADS_DIR", str(STATIC_DIR / "uploads")))
 CONTENT_FILE = DATA_DIR / "site_content.json"
 ADMIN_FILE = DATA_DIR / "admin.json"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "site-images")
 
 DEFAULT_CONTENT = {
     "hero_tag": "Webdesign voor nieuwkomers en starters",
@@ -37,6 +44,50 @@ DEFAULT_CONTENT = {
     "image_2_src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
     "image_3_src": "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=1200&q=80",
 }
+
+
+def supabase_enabled() -> bool:
+    return bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+
+
+def supabase_request(path: str, method: str = "GET", payload: Optional[dict] = None) -> Any:
+    if not supabase_enabled():
+        return None
+
+    url = f"{SUPABASE_URL}{path}"
+    headers = {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+    }
+    data = None
+    if payload is not None:
+        headers["Content-Type"] = "application/json"
+        headers["Prefer"] = "return=representation"
+        data = json.dumps(payload).encode("utf-8")
+
+    req = Request(url=url, method=method, headers=headers, data=data)
+    with urlopen(req, timeout=15) as response:
+        body = response.read().decode("utf-8")
+        return json.loads(body) if body else None
+
+
+def ensure_supabase_defaults() -> None:
+    if not supabase_enabled():
+        return
+    try:
+        supabase_request(
+            "/rest/v1/site_content?on_conflict=id",
+            method="POST",
+            payload=[{"id": 1, "data": DEFAULT_CONTENT}],
+        )
+        supabase_request(
+            "/rest/v1/admin_user?on_conflict=id",
+            method="POST",
+            payload=[{"id": 1, "username": "admin", "password_hash": generate_password_hash("admin123")}],
+        )
+    except (HTTPError, URLError, TimeoutError, ValueError):
+        # Als Supabase nog niet correct is geconfigureerd, blijft lokale fallback actief.
+        pass
 
 
 def ensure_data_files() -> None:
@@ -60,9 +111,102 @@ def write_json(path: Path, data: dict) -> None:
 
 
 def load_content() -> dict:
+    if supabase_enabled():
+        try:
+            result = supabase_request("/rest/v1/site_content?id=eq.1&select=data")
+            if result and isinstance(result, list) and result[0].get("data"):
+                content = DEFAULT_CONTENT.copy()
+                content.update(result[0]["data"])
+                return content
+        except (HTTPError, URLError, TimeoutError, ValueError, KeyError):
+            pass
+
     content = DEFAULT_CONTENT.copy()
     content.update(read_json(CONTENT_FILE))
     return content
+
+
+def save_content(content: dict) -> bool:
+    if supabase_enabled():
+        try:
+            supabase_request(
+                "/rest/v1/site_content?id=eq.1",
+                method="PATCH",
+                payload={"data": content},
+            )
+            return True
+        except (HTTPError, URLError, TimeoutError, ValueError):
+            return False
+
+    try:
+        write_json(CONTENT_FILE, content)
+        return True
+    except OSError:
+        return False
+
+
+def load_admin_data() -> dict:
+    if supabase_enabled():
+        try:
+            result = supabase_request("/rest/v1/admin_user?id=eq.1&select=username,password_hash")
+            if result and isinstance(result, list):
+                return result[0]
+        except (HTTPError, URLError, TimeoutError, ValueError, KeyError, IndexError):
+            pass
+    return read_json(ADMIN_FILE)
+
+
+def save_admin_data(admin_data: dict) -> bool:
+    if supabase_enabled():
+        try:
+            supabase_request(
+                "/rest/v1/admin_user?id=eq.1",
+                method="PATCH",
+                payload={
+                    "username": admin_data["username"],
+                    "password_hash": admin_data["password_hash"],
+                },
+            )
+            return True
+        except (HTTPError, URLError, TimeoutError, ValueError, KeyError):
+            return False
+
+    try:
+        write_json(ADMIN_FILE, admin_data)
+        return True
+    except OSError:
+        return False
+
+
+def upload_image(file_storage, slot: str) -> tuple[bool, str]:
+    ext = file_storage.filename.rsplit(".", 1)[1].lower()
+    filename = secure_filename(f"{slot}-{uuid4().hex}.{ext}")
+
+    if supabase_enabled():
+        try:
+            content = file_storage.read()
+            storage_path = f"{slot}/{filename}"
+            encoded_path = quote(storage_path, safe="/")
+            upload_url = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{encoded_path}"
+            headers = {
+                "apikey": SUPABASE_SERVICE_ROLE_KEY,
+                "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+                "x-upsert": "true",
+                "Content-Type": file_storage.mimetype or "application/octet-stream",
+            }
+            req = Request(url=upload_url, method="POST", headers=headers, data=content)
+            urlopen(req, timeout=30).read()
+            public_url = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/{encoded_path}"
+            return True, public_url
+        except (HTTPError, URLError, TimeoutError, ValueError):
+            return False, ""
+
+    try:
+        file_path = UPLOADS_DIR / filename
+        file_storage.save(file_path)
+        return True, url_for("uploaded_file", filename=filename)
+    except OSError:
+        return False, ""
 
 
 def allowed_file(filename: str) -> bool:
@@ -88,6 +232,8 @@ except OSError:
     CONTENT_FILE = DATA_DIR / "site_content.json"
     ADMIN_FILE = DATA_DIR / "admin.json"
     ensure_data_files()
+
+ensure_supabase_defaults()
 
 
 @app.route("/")
@@ -120,7 +266,7 @@ def admin_login():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
-        admin_data = read_json(ADMIN_FILE)
+        admin_data = load_admin_data()
         if username == admin_data.get("username") and check_password_hash(
             admin_data.get("password_hash", ""), password
         ):
@@ -155,10 +301,9 @@ def admin_dashboard():
             content["image_1_caption"] = request.form.get("image_1_caption", "").strip()
             content["image_2_caption"] = request.form.get("image_2_caption", "").strip()
             content["image_3_caption"] = request.form.get("image_3_caption", "").strip()
-            try:
-                write_json(CONTENT_FILE, content)
+            if save_content(content):
                 flash("Teksten zijn opgeslagen.", "success")
-            except OSError:
+            else:
                 flash("Opslaan mislukt op deze hosting omgeving.", "error")
             return redirect(url_for("admin_dashboard"))
 
@@ -167,15 +312,14 @@ def admin_dashboard():
             file = request.files.get("image_file")
             if slot in {"image_1_src", "image_2_src", "image_3_src"} and file and file.filename:
                 if allowed_file(file.filename):
-                    ext = file.filename.rsplit(".", 1)[1].lower()
-                    filename = secure_filename(f"{slot}-{uuid4().hex}.{ext}")
-                    file_path = UPLOADS_DIR / filename
-                    try:
-                        file.save(file_path)
-                        content[slot] = url_for("uploaded_file", filename=filename)
-                        write_json(CONTENT_FILE, content)
-                        flash("Foto succesvol geupload.", "success")
-                    except OSError:
+                    success, image_url = upload_image(file, slot)
+                    if success:
+                        content[slot] = image_url
+                        if save_content(content):
+                            flash("Foto succesvol geupload.", "success")
+                        else:
+                            flash("Foto geupload, maar inhoud opslaan is mislukt.", "error")
+                    else:
                         flash("Uploaden mislukt op deze hosting omgeving.", "error")
                 else:
                     flash("Bestandstype niet toegestaan. Gebruik png/jpg/jpeg/webp/gif.", "error")
@@ -187,7 +331,7 @@ def admin_dashboard():
             current_password = request.form.get("current_password", "")
             new_password = request.form.get("new_password", "")
             repeat_password = request.form.get("repeat_password", "")
-            admin_data = read_json(ADMIN_FILE)
+            admin_data = load_admin_data()
 
             if not check_password_hash(admin_data.get("password_hash", ""), current_password):
                 flash("Huidig wachtwoord klopt niet.", "error")
@@ -196,11 +340,10 @@ def admin_dashboard():
             elif new_password != repeat_password:
                 flash("Nieuwe wachtwoorden komen niet overeen.", "error")
             else:
-                try:
-                    admin_data["password_hash"] = generate_password_hash(new_password)
-                    write_json(ADMIN_FILE, admin_data)
+                admin_data["password_hash"] = generate_password_hash(new_password)
+                if save_admin_data(admin_data):
                     flash("Wachtwoord succesvol gewijzigd.", "success")
-                except OSError:
+                else:
                     flash("Wachtwoord opslaan mislukt op deze hosting omgeving.", "error")
             return redirect(url_for("admin_dashboard"))
 
